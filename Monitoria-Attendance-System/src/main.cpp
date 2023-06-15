@@ -20,8 +20,6 @@ void loop() {
     if(rfid.read_rfid_card() && rfid.is_new_rfid_card())
         Serial.println(rfid.to_string());
 
-    if(Serial.available()) {
+    if(Serial.available())
         sim800l.send_sms(Serial.readString(), MONITORIA_SMS_MESSAGE);
-        Serial.flush();
-    }
 }

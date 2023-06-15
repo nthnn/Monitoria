@@ -8,6 +8,7 @@ class MonitoriaSIM800L {
     public:
     MonitoriaSIM800L(uint16_t rx_pin, uint16_t tx_pin) {
         this->sim800l = Sim800L(rx_pin, tx_pin);
+        this->sim800l.begin();
     }
 
     void send_sms(String phoneNumber, String message);
