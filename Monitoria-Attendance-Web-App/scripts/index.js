@@ -4,6 +4,7 @@ const $ = require("jquery");
 const SerialPort = require('serialport').SerialPort;
 const sqlite3 = require('sqlite3').verbose();
 const md5 = require("md5");
+const base64 = require("base-64");
 
 let runtime = {
     port: null,
@@ -48,17 +49,30 @@ const App = {
     },
 
     processLogin: ()=> {
-        runtime.db.serialize(() => {
-            runtime.db.all('SELECT id, name, rfid FROM accounts', (err, rows) => {
-                if(err) {
-                } else {
-                    $("#login-section").removeClass("animate__slideInDown").addClass("animate__slideOutUp");
+        let username = base64.encode($("#username").val()), password = base64.encode(md5($("#password").val())), port = $("#serial-port").find(":selected").val();
 
-                    setTimeout(()=> $("#login-section").addClass("d-none"), 800);
-                    setTimeout(()=> {
-                        $("#logs-section").removeClass("d-none").addClass("animate_fadeIn");
-                        $("#main-navbar").removeClass("d-none").addClass("animate__slideInDown");
-                    }, 1000);
+        runtime.db.serialize(() => {
+            runtime.db.all("SELECT id, username, account_type, password FROM admins WHERE username=\"" + username + "\" AND password=\"" + password + "\"", (err, rows) => {
+                $("#login-error-message").addClass("d-none");
+
+                if(err) {
+                    $("#login-error-message").removeClass("d-none");
+                    $("#login-error-text").html("Something went wrong.");
+                }
+                else {
+                    if(password == rows[0].password) {
+                        $("#login-section").removeClass("animate__slideInDown").addClass("animate__slideOutUp");
+
+                        setTimeout(()=> $("#login-section").removeClass("d-flex").addClass("d-none"), 1000);
+                        setTimeout(()=> {
+                            $("#logs-section").removeClass("d-none").addClass("animate_slideInDown");
+                            $("#main-navbar").removeClass("d-none").addClass("animate__slideInDown");
+                        }, 1500);
+                    }
+                    else {
+                        $("#login-error-message").removeClass("d-none");
+                        $("#login-error-text").html("Invalid username or password.");
+                    }
                 }
               });
         });
