@@ -2,12 +2,16 @@ require("bootstrap");
 
 const $ = require("jquery");
 const SerialPort = require('serialport').SerialPort;
+const sqlite3 = require('sqlite3').verbose();
+const md5 = require("md5");
 
 let runtime = {
-    port: null
+    port: null,
+    db: new sqlite3.Database("db/main_db.db")
 };
 
 let cache = {
+    userId: null,
     prevPorts: []
 }
 
@@ -41,7 +45,24 @@ const App = {
                 })
                 .catch((err) => availablePorts.append("<option disabled>Cannot read serial ports.</option>"));
         }, 1000);
+    },
+
+    processLogin: ()=> {
+        runtime.db.serialize(() => {
+            runtime.db.all('SELECT id, name, rfid FROM accounts', (err, rows) => {
+                if(err) {
+                } else {
+                    $("#login-section").removeClass("animate__slideInDown").addClass("animate__slideOutUp");
+
+                    setTimeout(()=> $("#login-section").addClass("d-none"), 800);
+                    setTimeout(()=> {
+                        $("#logs-section").removeClass("d-none").addClass("animate_fadeIn");
+                        $("#main-navbar").removeClass("d-none").addClass("animate__slideInDown");
+                    }, 1000);
+                }
+              });
+        });
     }
-}
+};
 
 $(document).ready(()=> App.showSplashScreen());

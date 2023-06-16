@@ -18,14 +18,14 @@
     </div>
 
     <div id="main-content" class="d-none animate__animated">
-        <nav class="navbar navbar-expand-lg fixed-top bg-light shadow" data-bs-theme="light">
+        <nav class="navbar navbar-expand-lg fixed-top bg-light shadow animate__animated animate__slow d-none" data-bs-theme="light" id="main-navbar">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Monitoria</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse d-flex" id="navbar-main">
+                <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link active" href="#">Logs</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Accounts</a></li>
@@ -38,18 +38,50 @@
 
         <div class="container">
             <div class="d-flex h-100 w-100 animate__animated d-none justify-align-center align-items-center" id="login-section">
-                <div class="mx-auto my-auto col-lg-5">
+                <div class="mx-auto my-auto col-lg-4">
                     <br/><br/><br/>
                     <div class="card card-body">
                         <h1>Log-in</h1>
-                        <select class="form-select" id="available-ports"></select>
-                        <br/>
-                        <button class="btn btn-primary" onclick="App.proceedToLogs()">Continue</button>
+                        <hr/>
+
+                        <form>
+                            <div class="form-group row">
+                                <label for="username" class="col-form-label col-3">Username</label>
+                                <div class="col-9">
+                                    <input type="text" id="username" class="form-control" placeholder="Username" />
+                                </div>
+                            </div>
+                            <div class="form-group-gap"></div>
+
+                            <div class="form-group row">
+                                <label for="password" class="col-form-label col-3">Password</label>
+                                <div class="col-9">
+                                    <input type="password" id="password" class="form-control" placeholder="Password" />
+                                </div>
+                            </div>
+                            <div class="form-group-gap"></div>
+
+                            <div class="form-group row">
+                                <label for="available-ports" class="col-form-label col-3">Port</label>
+                                <div class="col-9">
+                                    <select class="form-select" id="available-ports">
+                                        <option selected disabled>No available port.</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </form>
+                        <hr/>
+                        <div id="login-error-message" class="d-none">
+                            <p class="text-danger" id="login-error-text"></p>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="App.processLogin()">Continue</button>
                     </div>
                 </div>
             </div>
 
-            <div class="card card-body d-none" id="logs-section">
+            <div class="card card-body d-none animate__animated animate__slow" id="logs-section">
                 <h1>Logs</h1>
 
                 <table class="table table-hover table-striped">

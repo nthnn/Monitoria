@@ -5,3 +5,7 @@
     height: 100vh !important;
     width: 100% !important;
 }
+
+.form-group-gap {
+    margin-top: 6px;
+}
