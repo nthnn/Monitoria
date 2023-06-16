@@ -17,12 +17,12 @@ const App = {
             $("#splash-screen").addClass("animate__fadeOut");
             $("#main-content").removeClass("d-none").addClass("animate__fadeIn");
 
-            setTimeout(()=> $("#config-section").removeClass("d-none").addClass("animate__slideInDown"), 800);
-            App.configSection();
+            setTimeout(()=> $("#login-section").removeClass("d-none").addClass("animate__slideInDown"), 800);
+            App.loginSection();
         }, 3000);
     },
 
-    configSection: ()=> {
+    loginSection: ()=> {
         setInterval(()=> {
             let availablePorts = $("#available-ports");
 
@@ -34,10 +34,12 @@ const App = {
                     availablePorts.html("");
                     cache.prevPorts = ports;
 
-                    ports.forEach((port)=>
+                    if(ports.length == 0)
+                        availablePorts.append("<option selected disabled>No available port.</option>");
+                    else ports.forEach((port)=>
                         availablePorts.append("<option value=\"" + port.path + "\">" + port.friendlyName + "</option>"));
                 })
-                .catch((err) => console.error('Error listing COM Ports:', err));
+                .catch((err) => availablePorts.append("<option disabled>Cannot read serial ports.</option>"));
         }, 1000);
     }
 }
