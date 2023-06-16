@@ -1,0 +1,7 @@
+#splash-screen {
+    background-color: var(--bs-color);
+    position: fixed;
+    display: block;
+    height: 100vh !important;
+    width: 100% !important;
+}

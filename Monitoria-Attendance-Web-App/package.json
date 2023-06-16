@@ -1,0 +1,17 @@
+{
+  "name": "monitoria-attendance-web-app",
+  "version": "1.0.0",
+  "description": "Web-based desktop app for the Monitoria Attendance System",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "test": "exit 1"
+  },
+  "author": "nthnn",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^25.1.1",
+    "serialport": "^11.0.0",
+    "sqlite3": "^5.1.6"
+  }
+}

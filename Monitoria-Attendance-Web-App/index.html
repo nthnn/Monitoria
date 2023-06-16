@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Monitoria</title>
+
+    <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet" />
+    <link href="styles/bootstrap.min.css" rel="stylesheet" />
+    <link href="styles/animate.min.css" rel="stylesheet" />
+    <link href="styles/index.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="splash-screen" class="animate__animated animate__slow">
+        <div class="d-flex h-100 justify-align-center align-items-center">
+            <img src="assets/monitoria-logo.png" class="mx-auto my-auto" width="200" />
+        </div>
+    </div>
+
+    <div id="main-content" class="d-none animate__animated">
+        <nav class="navbar navbar-expand-lg fixed-top bg-primary shadow" data-bs-theme="dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Monitoria</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse d-flex" id="navbar-main">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="#">Logs</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Accounts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <br/><br/><br/><br/>
+
+        <div class="container">
+            <div class="card card-body">
+                <h1>Logs</h1>
+
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <td>Date & Time</td>
+                        <td>Student Number</td>
+                        <td>Student Name</td>
+                    </thead>
+                    <tbody>
+                        <tbody id="log-table">
+                            <tr>
+                                <td>June 12, 2023 - 12:00:00</td>
+                                <td>2xx-03xxxM</td>
+                                <td>Juan Dela Cruz</td>
+                            </tr>
+                            <tr>
+                                <td>June 12, 2023 - 12:00:00</td>
+                                <td>2xx-03xxxM</td>
+                                <td>Juan Dela Cruz</td>
+                            </tr>
+                        </tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/jquery-3.7.0.min.js"></script>
+    <script src="scripts/bootstrap.bundle.min.js"></script>
+    <script src="scripts/index.js"></script>
+</body>
+</html>
