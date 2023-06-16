@@ -18,7 +18,7 @@
     </div>
 
     <div id="main-content" class="d-none animate__animated">
-        <nav class="navbar navbar-expand-lg fixed-top bg-primary shadow" data-bs-theme="dark">
+        <nav class="navbar navbar-expand-lg fixed-top bg-light shadow" data-bs-theme="light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Monitoria</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,7 @@
 
                 <div class="collapse navbar-collapse d-flex" id="navbar-main">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link" href="#">Logs</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#">Logs</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Accounts</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
                     </ul>
@@ -37,7 +37,19 @@
         <br/><br/><br/><br/>
 
         <div class="container">
-            <div class="card card-body">
+            <div class="d-flex h-100 w-100 animate__animated d-none justify-align-center align-items-center" id="config-section">
+                <div class="mx-auto my-auto col-lg-5">
+                    <br/><br/><br/>
+                    <div class="card card-body">
+                        <h1>Select Port</h1>
+                        <select class="form-select" id="available-ports"></select>
+                        <br/>
+                        <button class="btn btn-primary" onclick="App.proceedToLogs()">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-body d-none" id="logs-section">
                 <h1>Logs</h1>
 
                 <table class="table table-hover table-striped">
@@ -65,8 +77,6 @@
         </div>
     </div>
 
-    <script src="scripts/jquery-3.7.0.min.js"></script>
-    <script src="scripts/bootstrap.bundle.min.js"></script>
-    <script src="scripts/index.js"></script>
+    <script src="scripts/index.js" defer></script>
 </body>
 </html>

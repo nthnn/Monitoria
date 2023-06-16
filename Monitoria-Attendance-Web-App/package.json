@@ -10,7 +10,9 @@
   "author": "nthnn",
   "license": "MIT",
   "dependencies": {
+    "bootstrap": "^5.3.0",
     "electron": "^25.1.1",
+    "jquery": "^3.7.0",
     "serialport": "^11.0.0",
     "sqlite3": "^5.1.6"
   }

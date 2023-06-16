@@ -12,6 +12,7 @@ app.on('ready', ()=> {
         title: "Monitoria",
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false
         },
     });
 
