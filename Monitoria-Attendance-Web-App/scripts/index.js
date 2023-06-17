@@ -1,13 +1,16 @@
 require("bootstrap");
 
 const $ = require("jquery");
-const SerialPort = require('serialport').SerialPort;
-const sqlite3 = require('sqlite3').verbose();
+const SerialPort = require("serialport").SerialPort;
+const sqlite3 = require("sqlite3").verbose();
 const md5 = require("md5");
 const base64 = require("base-64");
+const { ReadlineParser } = require("@serialport/parser-readline");
 
 let runtime = {
     port: null,
+    serialPort: null,
+    serialPortPipe: null,
     interval: null,
     db: new sqlite3.Database("db/main_db.db")
 };
@@ -54,7 +57,9 @@ const App = {
     },
 
     logout: ()=> {
+        runtime.serialPort.close();
         $("#main-content").addClass("animate__slideOutUp");
+
         setTimeout(()=> window.location.reload(), 800);
     },
 
@@ -69,7 +74,7 @@ const App = {
             return;
         }
 
-        if(/^[a-zA-Z0-9_]+$/.test(username)) {
+        if(!/^[a-zA-Z0-9_]+$/.test(username)) {
             $("#login-error-message").removeClass("d-none");
             $("#login-error-text").html("Invalid username string.");
 
@@ -112,6 +117,8 @@ const App = {
                             clearInterval(runtime.interval);
 
                             cache.page = "logs";
+                            runtime.port = port;
+
                             App.showLogs();
                         }, 1500);
                     }
@@ -125,7 +132,31 @@ const App = {
     },
 
     showLogs: ()=> {
+        runtime.serialPort = new SerialPort({
+            path: runtime.port,
+            baudRate: 9600
+        });
 
+        runtime.serialPortPipe = runtime.serialPort.pipe(new ReadlineParser());
+        runtime.serialPortPipe.on("data", (data)=> {
+            runtime.db.serialize(()=> {
+                let rfid = data.toString().trim();
+
+                runtime.db.all("SELECT name, phone_number, stud_id, is_in FROM accounts WHERE rfid=\"" + rfid + "\"", (err, rows)=> {
+                    if(!err) {
+                        let date = new Date().toString();
+
+                        date = date.substring(4, date.length);
+                        date = date.substring(0, date.indexOf("("));
+
+                        runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, stud_id) VALUES(\"" + rows[0].name + "\", \"" + date + "\", \"" + rfid + "\", \"" + rows[0].phone_number + "\", \"" + rows[0].stud_id + "\")");
+                        runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
+
+                        $("#log-table").prepend("<tr><td>" + date + "</td><td>" + rows[0].stud_id + "</td><td>" + rows[0].phone_number + "</td><td>" + rows[0].name + "</td></tr>");
+                    }
+                });
+            });
+        });
     }
 };
 
