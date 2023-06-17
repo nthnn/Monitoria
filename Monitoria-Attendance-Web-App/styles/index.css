@@ -1,4 +1,9 @@
+* { -webkit-user-select: none; }
+
+.nav-item a { -webkit-app-region: no-drag; }
+
 #splash-screen {
+    -webkit-app-region: drag !important;
     background-color: var(--bs-color);
     position: fixed;
     display: block;
@@ -6,6 +11,4 @@
     width: 100% !important;
 }
 
-.form-group-gap {
-    margin-top: 6px;
-}
+.form-group-gap { margin-top: 6px; }
