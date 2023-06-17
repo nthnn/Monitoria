@@ -13,6 +13,7 @@ let runtime = {
 };
 
 let cache = {
+    page: null,
     userId: null,
     prevPorts: []
 }
@@ -58,12 +59,42 @@ const App = {
     },
 
     processLogin: ()=> {
-        let username = base64.encode($("#username").val()), password = base64.encode(md5($("#password").val())), port = $("#serial-port").find(":selected").val();
+        let username = $("#username").val(), password = $("#password").val(), port = $("#available-ports option:selected").val();
+
+        $("#login-error-message").addClass("d-none");
+        if(!username || username == "") {
+            $("#login-error-message").removeClass("d-none");
+            $("#login-error-text").html("Username cannot be empty.");
+
+            return;
+        }
+
+        if(/^[a-zA-Z0-9_]+$/.test(username)) {
+            $("#login-error-message").removeClass("d-none");
+            $("#login-error-text").html("Invalid username string.");
+
+            return;
+        }
+
+        if(!password || password == "") {
+            $("#login-error-message").removeClass("d-none");
+            $("#login-error-text").html("Password cannot be empty.");
+
+            return;
+        }
+
+        if(!port || port == "No available port.") {
+            $("#login-error-message").removeClass("d-none");
+            $("#login-error-text").html("No selected port.");
+
+            return;
+        }
+
+        username = base64.encode(username);
+        password = base64.encode(md5(password));
 
         runtime.db.serialize(() => {
             runtime.db.all("SELECT id, username, account_type, password FROM admins WHERE username=\"" + username + "\" AND password=\"" + password + "\"", (err, rows) => {
-                $("#login-error-message").addClass("d-none");
-
                 if(err) {
                     $("#login-error-message").removeClass("d-none");
                     $("#login-error-text").html("Something went wrong.");
@@ -79,6 +110,9 @@ const App = {
 
                             setTimeout(()=> $("#main-navbar").addClass("d-block"), 1000);
                             clearInterval(runtime.interval);
+
+                            cache.page = "logs";
+                            App.showLogs();
                         }, 1500);
                     }
                     else {
@@ -88,6 +122,10 @@ const App = {
                 }
             });
         });
+    },
+
+    showLogs: ()=> {
+
     }
 };
 
