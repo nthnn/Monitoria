@@ -5,8 +5,9 @@
 
     <title>Monitoria</title>
 
-    <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet" />
     <link href="styles/bootstrap.min.css" rel="stylesheet" />
+    <link href="styles/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="styles/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="styles/animate.min.css" rel="stylesheet" />
     <link href="styles/index.css" rel="stylesheet" />
 </head>
@@ -84,23 +85,25 @@
                 <div class="card card-body">
                     <h1>Logs</h1>
 
-                    <table class="table table-hover table-striped">
+                    <table class="table table-hover table-striped" id="logs">
                         <thead>
                             <td>Date & Time</td>
                             <td>Student Number</td>
                             <td>Phone Number</td>
                             <td>Student Name</td>
                         </thead>
-                        <tbody>
-                            <tbody id="log-table">
-                            </tbody>
-                        </tbody>
+
+                        <tbody id="log-table"></tbody>
                     </table>
                 </div>
+
+                <br/><br/><br/>
             </div>
         </div>
     </div>
 
+    <script src="scripts/requirements.js"></script>
+    <script src="scripts/jquery.dataTables.min.js"></script>
     <script src="scripts/index.js" defer></script>
 </body>
 </html>
