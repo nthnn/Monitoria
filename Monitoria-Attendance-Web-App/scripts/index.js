@@ -124,10 +124,10 @@ const App = {
 
     showLogs: ()=> {
         runtime.db.serialize(()=> {
-            runtime.db.all("SELECT name, date_time, rfid, phone_number, stud_id, is_in FROM logs", (error, attendee_rows)=> {
+            runtime.db.all("SELECT name, date_time, rfid, phone_number, ent_id, is_in FROM logs", (error, attendee_rows)=> {
                 if(!error) {
                     for(let attendee_row of attendee_rows)
-                        $("#log-table").prepend("<tr><td>" + attendee_row.date_time + "</td><td>" + attendee_row.stud_id + "</td><td>" + attendee_row.phone_number + "</td><td>" + attendee_row.name + "</td></tr>");
+                        $("#log-table").prepend("<tr><td>" + attendee_row.date_time + "</td><td>" + attendee_row.ent_id + "</td><td>" + attendee_row.phone_number + "</td><td>" + attendee_row.name + "</td></tr>");
                         $('#logs').DataTable({
                             ordering: false
                         });
@@ -142,17 +142,17 @@ const App = {
                 runtime.serialPortPipe.on("data", (data)=> {
                     let rfid = data.toString().trim();
         
-                    runtime.db.all("SELECT name, phone_number, stud_id, is_in FROM accounts WHERE rfid=\"" + rfid + "\"", (err, rows)=> {
+                    runtime.db.all("SELECT name, phone_number, ent_id, is_in FROM accounts WHERE rfid=\"" + rfid + "\"", (err, rows)=> {
                         if(!err) {
                             let date = new Date().toString();
         
                             date = date.substring(4, date.length);
                             date = date.substring(0, date.indexOf("("));
         
-                            runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, stud_id, is_in) VALUES(\"" + rows[0].name + "\", \"" + date + "\", \"" + rfid + "\", \"" + rows[0].phone_number + "\", \"" + rows[0].stud_id + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
+                            runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + rows[0].name + "\", \"" + date + "\", \"" + rfid + "\", \"" + rows[0].phone_number + "\", \"" + rows[0].ent_id + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
                             runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
 
-                            $("#log-table").prepend("<tr><td>" + date + "</td><td>" + rows[0].stud_id + "</td><td>" + rows[0].phone_number + "</td><td>" + rows[0].name + "</td></tr>");
+                            $("#log-table").prepend("<tr><td>" + date + "</td><td>" + rows[0].ent_id + "</td><td>" + rows[0].phone_number + "</td><td>" + rows[0].name + "</td></tr>");
                         }
                     });
                 });
