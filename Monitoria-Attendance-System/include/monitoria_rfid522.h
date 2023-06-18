@@ -11,9 +11,11 @@ class MonitoriaRFID522 {
     }
 
     void init();
+    void reset_previous_id();
+    void cycle();
+
     String to_string();
 
-    bool cycle();
     bool is_new_rfid_card();
     bool read_rfid_card();
 

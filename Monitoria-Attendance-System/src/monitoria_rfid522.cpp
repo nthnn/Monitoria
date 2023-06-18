@@ -4,8 +4,15 @@ void MonitoriaRFID522::init() {
     this->rfid.PCD_Init();
 }
 
-bool MonitoriaRFID522::cycle() {
-    return this->rfid.PICC_IsNewCardPresent();
+void MonitoriaRFID522::reset_previous_id() {
+    this->prev_id[0] = 0;
+    this->prev_id[1] = 0;
+    this->prev_id[2] = 0;
+    this->prev_id[3] = 0;
+}
+
+void MonitoriaRFID522::cycle() {
+    this->rfid.PICC_IsNewCardPresent();
 }
 
 bool MonitoriaRFID522::read_rfid_card() {
