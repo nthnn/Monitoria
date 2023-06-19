@@ -23,13 +23,11 @@ void loop() {
     if(curr_millis - prev_millis > 5000) {
         prev_millis = curr_millis;
         rfid.reset_previous_id();
-
-        Serial.println(rfid.to_string());
     }
 
+    rfid.cycle();
     if(rfid.read_rfid_card() && rfid.is_new_rfid_card())
         Serial.println(rfid.to_string());
-    rfid.cycle();
 
     if(Serial.available())
         sim800l.send_sms(Serial.readString(), MONITORIA_SMS_MESSAGE);

@@ -6,7 +6,7 @@
 
 class MonitoriaRFID522 {
     public:
-    MonitoriaRFID522(uint16_t ss_pin, uint16_t rst_pin) {
+    MonitoriaRFID522(uint16_t ss_pin, uint16_t rst_pin): _ss_pin(ss_pin), _rst_pin(rst_pin) {
         this->rfid = MFRC522(ss_pin, rst_pin);
     }
 
@@ -21,6 +21,8 @@ class MonitoriaRFID522 {
 
     private:
     MFRC522 rfid;
+
+    uint16_t _ss_pin, _rst_pin;
     byte prev_id[4] = {0, 0, 0, 0}, new_id[4] = {0, 0, 0, 0};
 };
 

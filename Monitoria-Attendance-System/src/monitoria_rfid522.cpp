@@ -4,11 +4,22 @@ void MonitoriaRFID522::init() {
     this->rfid.PCD_Init();
 }
 
+
 void MonitoriaRFID522::reset_previous_id() {
     this->prev_id[0] = 0;
     this->prev_id[1] = 0;
     this->prev_id[2] = 0;
     this->prev_id[3] = 0;
+    
+    this->new_id[0] = 0;
+    this->new_id[1] = 0;
+    this->new_id[2] = 0;
+    this->new_id[3] = 0;
+
+    this->rfid.PCD_Reset();
+    this->rfid = MFRC522(this->_ss_pin, this->_rst_pin);
+
+    this->rfid.PCD_Init();
 }
 
 void MonitoriaRFID522::cycle() {

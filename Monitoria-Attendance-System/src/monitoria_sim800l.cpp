@@ -6,7 +6,7 @@ void MonitoriaSIM800L::send_sms(String phoneNumber, String message) {
     int day, month, year, hour, minute, second;
     int cpnlen = phoneNumber.length(), smslen = 0;
 
-    char *cpn, *smsmsg;
+    char *cpn = "", *smsmsg = "";
     phoneNumber.toCharArray(cpn, cpnlen);
 
     this->sim800l.updateRtc(8);
