@@ -7,6 +7,7 @@ app.on('ready', ()=> {
         height: height,
         autoHideMenuBar: true,
         frame: false,
+        icon: "assets/ic-monitoria.ico",
         title: "Monitoria",
         titleBarStyle: "hidden",
         titleBarOverlay: {

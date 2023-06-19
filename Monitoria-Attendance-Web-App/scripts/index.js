@@ -20,8 +20,6 @@ let runtime = {
     db: new sqlite3.Database(path.resolve(__dirname, "./db/main_db.db"))
 };
 
-console.log(path.resolve(__dirname, "./db/main_db.db"));
-
 let cache = {
     page: null,
     userId: null,
@@ -29,6 +27,22 @@ let cache = {
 }
 
 const App = {
+    moveToSection: (section)=> {
+        if(section == cache.page)
+            return;
+
+        $("#" + cache.page + "-section").removeClass("animate__slideInDown").addClass("animate__slideOutUp");
+        setTimeout(()=> {
+            $("#" + cache.page + "-section").addClass("d-none");
+            $("#" + section + "-section").removeClass("d-none").removeClass("animate__slideOutUp").addClass("animate__slideInDown");
+
+            $("#" + cache.page + "-nav").removeClass("active");
+            $("#" + section + "-nav").addClass("active");
+
+            cache.page = section;
+        }, 1000);
+    },
+
     showSplashScreen: (nextContent)=> {
         setTimeout(()=> {
             $("#splash-screen").addClass("animate__fadeOut");

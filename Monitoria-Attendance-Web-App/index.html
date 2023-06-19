@@ -5,6 +5,7 @@
 
     <title>Monitoria</title>
 
+    <link href="assets/ic-monitoria.ico" rel="shortcut icon" />
     <link href="styles/bootstrap.min.css" rel="stylesheet" />
     <link href="styles/dataTables.bootstrap5.min.css" rel="stylesheet" />
     <link href="styles/jquery.dataTables.min.css" rel="stylesheet" />
@@ -28,8 +29,8 @@
 
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link active" href="#">Logs</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Accounts</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#" id="logs-nav" onclick="App.moveToSection('logs')">Logs</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" id="accounts-nav" onclick="App.moveToSection('accounts')">Accounts</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
                         <li class="nav-item"><a class="nav-link" href="#" onclick="App.logout()">Log-out</a></li>
                     </ul>
