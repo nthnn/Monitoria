@@ -4,7 +4,7 @@ app.on('ready', ()=> {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
     let mainWindow = new BrowserWindow({
         width: width - 350,
-        height: height - 100,
+        height: height,
         autoHideMenuBar: true,
         frame: false,
         title: "Monitoria",

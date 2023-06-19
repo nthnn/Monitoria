@@ -1,10 +1,26 @@
+const path = require("path");
+const $ = require("jquery");
+const SerialPort = require("serialport").SerialPort;
+const sqlite3 = require("sqlite3").verbose();
+const md5 = require("md5");
+const base64 = require("base-64");
+const { ReadlineParser } = require("@serialport/parser-readline");
+const jQuery = $;
+
+require("bootstrap");
+
+window.jQuery = window.$ = $;
+$.DataTable = require("datatables.net-bs5")(window, $);
+
 let runtime = {
     port: null,
     serialPort: null,
     serialPortPipe: null,
     interval: null,
-    db: new sqlite3.Database("db/main_db.db")
+    db: new sqlite3.Database(path.resolve(__dirname, "./db/main_db.db"))
 };
+
+console.log(path.resolve(__dirname, "./db/main_db.db"));
 
 let cache = {
     page: null,
@@ -51,7 +67,7 @@ const App = {
         runtime.serialPort.close();
         $("#main-content").addClass("animate__slideOutUp");
 
-        setTimeout(()=> window.location.reload(), 800);
+        setTimeout(()=> window.location.reload(), 1000);
     },
 
     processLogin: ()=> {

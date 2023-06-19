@@ -1,15 +1,13 @@
 {
-  "name": "monitoria-attendance-installer-generator",
+  "name": "monitoria_attendance_installer_generator",
   "version": "1.0.0",
-  "description": "Installer generator for the Monitoria web-based app.",
-  "main": "main.js",
+  "description": "Microsoft Installer generator for Monitoria.",
   "scripts": {
-    "start": "npm main.js"
+    "packager": "npx electron-packager ../Monitoria-Attendance-Web-App Monitoria --overwrite"
   },
   "author": "nthnn",
   "license": "MIT",
-  "dependencies": {
-    "electron-packager": "^17.1.1",
-    "electron-wix-msi": "^5.0.0"
+  "devDependencies": {
+    "electron-packager": "^17.1.1"
   }
 }
