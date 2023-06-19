@@ -1,0 +1,23 @@
+RFIC-RC522    Arduino UNO
+
+3.3V          3.3V
+RST           D9
+GND           GND
+MISO          D12
+MOSI          D11
+SCK           D13
+SDA           D10
+
+---------------------------------
+
+SIM800L       Arduino UNO
+
+TX            D0 (RX)
+RX            D1 (TX)
+
+---------------------------------
+
+SIM800L       Buck Booster
+
+VCC           Output
+GND           Ground
