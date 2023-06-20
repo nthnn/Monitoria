@@ -26,6 +26,29 @@ let cache = {
     prevPorts: []
 }
 
+const Modal = {
+    showModal: (modal)=> $("#" + modal + "-modal").removeClass("animate__fadeOut").show().addClass("animate__fadeIn"),
+
+    closeModal: (modal)=> {
+        $("#" + modal + "-modal").addClass("animate__fadeOut").removeClass("animate__fadeIn");
+
+        setTimeout(()=> {
+            $("#" + modal + "-modal").hide();
+
+            for(let id of [
+                "add-entity-name",
+                "add-entity-username",
+                "add-entity-email",
+                "add-entity-rfid",
+                "add-entity-password",
+                "add-entity-password-confirmation",
+            ])
+
+            $("#" + id).val("");
+        }, 850);
+    }
+};
+
 const App = {
     moveToSection: (section)=> {
         if(section == cache.page)
