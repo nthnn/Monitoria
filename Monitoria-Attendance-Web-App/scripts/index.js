@@ -224,7 +224,7 @@ const App = {
                     let rfid = data.toString().trim();
         
                     runtime.db.all("SELECT name, phone_number, ent_id, is_in FROM accounts WHERE rfid=\"" + rfid + "\"", (err, rows)=> {
-                        if(!err) {
+                        if(!err && rows.length >= 0) {
                             let date = new Date().toString();
 
                             date = date.substring(4, date.length);

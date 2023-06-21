@@ -31,7 +31,7 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link active" href="#" id="logs-nav" onclick="App.moveToSection('logs')">Logs</a></li>
                         <li class="nav-item"><a class="nav-link" href="#" id="accounts-nav" onclick="App.moveToSection('accounts')">Accounts</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" id="settings-nav" onclick="App.moveToSection('settings')">Settings</a></li>
                         <li class="nav-item"><a class="nav-link" href="#" onclick="App.logout()">Log-out</a></li>
                     </ul>
                 </div>
@@ -115,6 +115,13 @@
                             <button class="btn btn-primary" onclick="App.addEntityModal()">New Entity</button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="d-none animate__animated animate__slow" id="settings-section">
+                <br/><br/><br/><br/>
+                <div class="card card-body">
+                    <h1>Settings</h1>
                 </div>
             </div>
         </div>

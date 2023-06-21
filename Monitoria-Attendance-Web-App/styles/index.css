@@ -1,5 +1,7 @@
 * { -webkit-user-select: none; }
 
+.navbar { outline: none; }
+
 .nav-item a { -webkit-app-region: no-drag; }
 
 #splash-screen {
@@ -20,5 +22,6 @@
 }
 
 #add-entity-rfid-barcode {
+    width: 100%;
     height: 50px;
 }
