@@ -52,7 +52,7 @@ const Modal = {
 };
 
 const App = {
-    moveToSection: (section)=> {
+    moveToSection: (section, fun)=> {
         if(section == cache.page)
             return;
 
@@ -64,9 +64,13 @@ const App = {
             $("#" + cache.page + "-nav").removeClass("active");
             $("#" + section + "-nav").addClass("active");
 
-            runtime.moveToSectionEvent();
-            runtime.moveToSectionEvent = null;
             cache.page = section;
+
+            if(runtime.moveToSectionEvent) {
+                runtime.moveToSectionEvent();
+                runtime.moveToSectionEvent = null;
+            }
+            if(fun) fun();
         }, 1000);
     },
 
@@ -127,7 +131,8 @@ const App = {
     },
 
     logout: ()=> {
-        runtime.serialPort.close();
+        if(runtime.serialPort.isOpen())
+            runtime.serialPort.close();
         $("#main-content").addClass("animate__slideOutUp");
 
         setTimeout(()=> window.location.reload(), 1000);
@@ -204,10 +209,13 @@ const App = {
     showLogs: ()=> {
         runtime.db.serialize(()=> {
             runtime.db.all("SELECT name, date_time, rfid, phone_number, ent_id, is_in FROM logs", (error, attendee_rows)=> {
-                if(!error) {
+                let dataTable = null;
+                if(!error && attendee_rows.length >= 0) {
+                    $("#log-table").html("");
+
                     for(let attendee_row of attendee_rows)
                         $("#log-table").prepend("<tr><td>" + attendee_row.date_time + "</td><td>" + attendee_row.ent_id + "</td><td>" + attendee_row.phone_number + "</td><td>" + attendee_row.name + "</td></tr>");
-                        $('#logs').DataTable({
+                        dataTable = $('#logs').DataTable({
                             ordering: false
                         });
                 }
@@ -217,9 +225,15 @@ const App = {
                     baudRate: 9600
                 });
 
-                runtime.moveToSectionEvent = ()=> runtime.serialPort.close();
-                runtime.serialPortPipe = runtime.serialPort.pipe(new ReadlineParser());
+                runtime.moveToSectionEvent = ()=> {
+                    runtime.serialPort.close();
+                    dataTable.destroy();
 
+                    runtime.db.close();
+                    runtime.db = new sqlite3.Database(path.resolve(__dirname, "./db/main_db.db"));
+                };
+
+                runtime.serialPortPipe = runtime.serialPort.pipe(new ReadlineParser());
                 runtime.serialPortPipe.on("data", (data)=> {
                     let rfid = data.toString().trim();
         

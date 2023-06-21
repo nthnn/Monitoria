@@ -29,9 +29,9 @@
 
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link active" href="#" id="logs-nav" onclick="App.moveToSection('logs')">Logs</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" id="accounts-nav" onclick="App.moveToSection('accounts')">Accounts</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" id="settings-nav" onclick="App.moveToSection('settings')">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#" id="logs-nav" onclick="App.moveToSection('logs', App.showLogs)">Logs</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" id="accounts-nav" onclick="App.moveToSection('accounts', null)">Accounts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" id="settings-nav" onclick="App.moveToSection('settings', App.showSettings)">Settings</a></li>
                         <li class="nav-item"><a class="nav-link" href="#" onclick="App.logout()">Log-out</a></li>
                     </ul>
                 </div>
@@ -85,6 +85,7 @@
                 <br/><br/><br/><br/>
                 <div class="card card-body">
                     <h1>Logs</h1>
+                    <hr/>
 
                     <table class="table table-hover table-striped" id="logs">
                         <thead>
@@ -115,6 +116,7 @@
                             <button class="btn btn-primary" onclick="App.addEntityModal()">New Entity</button>
                         </div>
                     </div>
+                    <hr/>
                 </div>
             </div>
 
@@ -122,6 +124,51 @@
                 <br/><br/><br/><br/>
                 <div class="card card-body">
                     <h1>Settings</h1>
+                    <hr/>
+
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+
+                        <div class="col-lg-8">
+                            <div class="form-group row">
+                                <label for="settings-username" class="col-form-label col-3">Username</label>
+                                <div class="col-9">
+                                    <input type="text" id="settings-username" class="form-control" placeholder="Username" />
+                                </div>
+                            </div>
+                            <div class="form-group-gap"></div>
+        
+                            <div class="form-group row">
+                                <label for="settings-password" class="col-form-label col-3">Old Password</label>
+                                <div class="col-9">
+                                    <input type="text" id="settings-password" class="form-control" placeholder="Old Password" />
+                                </div>
+                            </div>
+                            <div class="form-group-gap"></div>
+
+                            <div class="form-group row">
+                                <label for="settings-new-password" class="col-form-label col-3">New Password</label>
+                                <div class="col-9">
+                                    <input type="text" id="settings-new-password" class="form-control" placeholder="New Password" />
+                                </div>
+                            </div>
+                            <div class="form-group-gap"></div>
+
+                            <div class="form-group row">
+                                <label for="settings-new-password-confirm" class="col-form-label col-3">Confirm</label>
+                                <div class="col-9">
+                                    <input type="text" id="settings-new-password-confirm" class="form-control" placeholder="Confirm New Password" />
+                                </div>
+                            </div>
+
+                            <br/>
+                            <div align="right">
+                                <button class="btn btn-primary" onclick="App.applySettings()">Save Changes</button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2"></div>
+                    </div>
                 </div>
             </div>
         </div>
