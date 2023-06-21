@@ -6,6 +6,7 @@ const md5 = require("md5");
 const base64 = require("base-64");
 const { ReadlineParser } = require("@serialport/parser-readline");
 const jQuery = $;
+const JsBarcode = require("jsbarcode");
 
 require("bootstrap");
 
@@ -17,6 +18,7 @@ let runtime = {
     serialPort: null,
     serialPortPipe: null,
     interval: null,
+    moveToSectionEvent: null,
     db: new sqlite3.Database(path.resolve(__dirname, "./db/main_db.db"))
 };
 
@@ -62,8 +64,32 @@ const App = {
             $("#" + cache.page + "-nav").removeClass("active");
             $("#" + section + "-nav").addClass("active");
 
+            runtime.moveToSectionEvent();
+            runtime.moveToSectionEvent = null;
             cache.page = section;
         }, 1000);
+    },
+
+    addEntityModal: ()=> {
+        Modal.showModal("add-entity");
+
+        runtime.serialPort = new SerialPort({
+            path: runtime.port,
+            baudRate: 9600
+        });
+
+        runtime.moveToSectionEvent = ()=> runtime.serialPort.close();
+        runtime.serialPortPipe = runtime.serialPort.pipe(new ReadlineParser());
+
+        runtime.serialPortPipe.on("data", (data)=> {
+            let rfid = data.toString().trim();
+
+            $("#add-entity-no-rfid").addClass("d-none");
+            $("#add-entity-rfid-barcode").removeClass("d-none");
+            $("#add-entity-rfid").attr("value", rfid);
+
+            JsBarcode("#add-entity-rfid-barcode", rfid, { displayValue: false });
+        });
     },
 
     showSplashScreen: (nextContent)=> {
@@ -190,15 +216,17 @@ const App = {
                     path: runtime.port,
                     baudRate: 9600
                 });
-        
+
+                runtime.moveToSectionEvent = ()=> runtime.serialPort.close();
                 runtime.serialPortPipe = runtime.serialPort.pipe(new ReadlineParser());
+
                 runtime.serialPortPipe.on("data", (data)=> {
                     let rfid = data.toString().trim();
         
                     runtime.db.all("SELECT name, phone_number, ent_id, is_in FROM accounts WHERE rfid=\"" + rfid + "\"", (err, rows)=> {
                         if(!err) {
                             let date = new Date().toString();
-        
+
                             date = date.substring(4, date.length);
                             date = date.substring(0, date.indexOf("("));
         
