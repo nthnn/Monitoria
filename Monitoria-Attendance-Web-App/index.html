@@ -111,8 +111,8 @@
                         </div>
 
                         <div class="col-lg-6" align="right">
-                            <button class="btn btn-primary" onclick="Modal.showModal('add-entity')">New Admin</button>
-                            <button class="btn btn-primary">New Entity</button>
+                            <button class="btn btn-primary" onclick="Modal.showModal('add-admin')">New Admin</button>
+                            <button class="btn btn-primary" onclick="Modal.showModal('add-entity')">New Entity</button>
                         </div>
                     </div>
                 </div>
@@ -155,6 +155,14 @@
                         <div style="height: 6px"></div>
 
                         <div class="row">
+                            <label for="add-entity-rfid" class="col-form-label col-4">RFID</label>
+                            <div class="col-8">
+                                <input type="hidden" id="add-entity-rfid" value="null" />
+                                <p id="add-entity-no-rfid" class="form-control">Tap RFID to be registered.</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <label for="add-entity-password" class="col-form-label col-4">Password</label>
                             <div class="col-8">
                                 <input type="password" id="add-entity-password" class="form-control" placeholder="Password" />
@@ -163,7 +171,7 @@
                         <div style="height: 6px"></div>
 
                         <div class="row">
-                            <label for="add-entity-password-confirmation" class="col-form-label col-4">Confirm Password</label>
+                            <label for="add-entity-password-confirmation" class="col-form-label col-4">Confirm</label>
                             <div class="col-8">
                                 <input type="password" id="add-entity-password-confirmation" class="form-control" placeholder="Confirm Password" />
                             </div>
@@ -180,6 +188,63 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="Modal.closeModal('add-entity')">Cancel</button>
                     <button type="button" class="btn btn-primary" style="float: right" onclick="App.executeAddEntity()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-backdrop animate__animated animate__faster" id="add-admin-modal" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Administrator</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="Modal.closeModal('add-admin')"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <label for="add-admin-name" class="col-form-label col-4">Name</label>
+                            <div class="col-8">
+                                <input type="text" id="add-admin-name" class="form-control" placeholder="Name" />
+                            </div>
+                        </div>
+                        <div style="height: 6px"></div>
+
+                        <div class="row">
+                            <label for="add-admin-username" class="col-form-label col-4">Username</label>
+                            <div class="col-8">
+                                <input type="text" id="add-admin-username" class="form-control" placeholder="Username" />
+                            </div>
+                        </div>
+                        <div style="height: 6px"></div>
+
+                        <div class="row">
+                            <label for="add-admin-password" class="col-form-label col-4">Password</label>
+                            <div class="col-8">
+                                <input type="password" id="add-admin-password" class="form-control" placeholder="Password" />
+                            </div>
+                        </div>
+                        <div style="height: 6px"></div>
+
+                        <div class="row">
+                            <label for="add-admin-password-confirmation" class="col-form-label col-4">Confirm</label>
+                            <div class="col-8">
+                                <input type="password" id="add-admin-password-confirmation" class="form-control" placeholder="Confirm Password" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="add-admin-error" class="animate__animated d-none">
+                        <br/>
+                        <div class="card card-body border-danger border text-white bg-danger" id="add-admin-error-text">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="Modal.closeModal('add-admin')">Cancel</button>
+                    <button type="button" class="btn btn-primary" style="float: right" onclick="App.executeAddAdministrator()">Save Changes</button>
                 </div>
             </div>
         </div>
