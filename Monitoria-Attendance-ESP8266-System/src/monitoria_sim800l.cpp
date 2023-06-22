@@ -1,7 +1,7 @@
 #include "monitoria_sim800l.h"
 
 void MonitoriaSIM800L::send_sms(String phoneNumber, String message) {
-    String months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    /*String months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     int day, month, year, hour, minute, second;
     int cpnlen = phoneNumber.length(), smslen = 0;
@@ -19,5 +19,5 @@ void MonitoriaSIM800L::send_sms(String phoneNumber, String message) {
     smslen =  sms.length();
     sms.toCharArray(smsmsg, smslen);
 
-    this->sim800l.sendSms(cpn, smsmsg);
+    this->sim800l.sendSms(cpn, smsmsg);*/
 }

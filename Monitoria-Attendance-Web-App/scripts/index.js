@@ -39,14 +39,14 @@ const Modal = {
 
             for(let id of [
                 "add-entity-name",
-                "add-entity-username",
-                "add-entity-email",
+                "add-entity-phone-number",
                 "add-entity-rfid",
-                "add-entity-password",
-                "add-entity-password-confirmation",
+                "add-entity-ent-id"
             ])
+                $("#" + id).val("");
 
-            $("#" + id).val("");
+            $("#add-entity-no-rfid").removeClass("d-none");
+            $("#add-entity-rfid-barcode").addClass("d-none");
         }, 850);
     }
 };

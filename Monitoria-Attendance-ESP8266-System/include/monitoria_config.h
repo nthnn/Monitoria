@@ -10,4 +10,7 @@
 
 #define MONITORIA_SMS_MESSAGE "Attendance recorded."
 
+#define MONITORIA_SERVER_SSID "monitoria"
+#define MONITORIA_SERVER_PASSWORD "!tUblxofr6k+fretr&h5"
+
 #endif
