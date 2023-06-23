@@ -200,6 +200,9 @@ const App = {
                             runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + rows[0].name + "\", \"" + date + "\", \"" + rfid + "\", \"" + rows[0].phone_number + "\", \"" + rows[0].ent_id + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
                             runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
 
+                            dataTable.rows.add([[date, rows[0].ent_id, rows[0].phone_number, rows[0].name]]);
+                            dataTable.draw();
+
                             $("#log-table").prepend("<tr><td>" + date + "</td><td>" + rows[0].ent_id + "</td><td>" + rows[0].phone_number + "</td><td>" + rows[0].name + "</td></tr>");
                         }
                     });
