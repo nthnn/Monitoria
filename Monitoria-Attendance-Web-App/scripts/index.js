@@ -183,13 +183,18 @@ const App = {
                         dataTable = $('#logs').DataTable({ order: [0, "desc"] });
                 }
 
-                let previousReading = null, resetPreviousID = setInterval(()=> previousReading = null, 5000);
+                let previousReading = null,
+                    resetReading = ()=> previousReading = null,
+                    resetPreviousID = setInterval(resetReading, 6000);
+
                 let readingInterval = setInterval(()=> $.post(runtime.server + "/read", {}, (data)=> {
                     let rfid = data.toString().trim();
                     if(previousReading == rfid)
                         return;
                     
                     previousReading = rfid;
+                    resetPreviousID = setInterval(resetReading, 6000);
+
                     runtime.db.all("SELECT name, phone_number, ent_id, is_in FROM accounts WHERE rfid=\"" + rfid + "\"", (err, rows)=> {
                         if(!err && rows.length == 1) {
                             let date = new Date().toString();
@@ -204,7 +209,7 @@ const App = {
                             dataTable.draw();
                         }
                     });
-                }), 1000);
+                }), 1800);
 
                 runtime.moveToSectionEvent = ()=> {
                     dataTable.destroy();
