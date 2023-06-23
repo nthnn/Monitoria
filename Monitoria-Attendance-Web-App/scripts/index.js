@@ -332,6 +332,9 @@ const App = {
 };
 
 $(document).ready(()=> {
+    require("popper.js");
     require("bootstrap");
+
+    $(".dropdown-toggle").dropdown();
     App.showSplashScreen();
 });

@@ -107,8 +107,16 @@
                         </div>
 
                         <div class="col-lg-6" align="right">
-                            <button class="btn btn-primary" onclick="App.addAdminModal()">New Admin</button>
-                            <button class="btn btn-primary" onclick="App.addEntityModal()">New Entity</button>
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="add-account-button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Add Account
+                                </button>
+
+                                <div class="dropdown-menu" aria-labelledby="add-account-button">
+                                    <a class="dropdown-item" href="#" onclick="App.addAdminModal()">Administrator</a>
+                                    <a class="dropdown-item" href="#" onclick="App.addEntityModal()">Entity</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr/>
