@@ -43,7 +43,7 @@ void setup() {
 
 void loop() {
     unsigned long curr_millis = millis();
-    if(curr_millis - prev_millis > 3000) {
+    if(curr_millis - prev_millis > 1800) {
         prev_millis = curr_millis;
         rfid.reset_rfid();
     }
