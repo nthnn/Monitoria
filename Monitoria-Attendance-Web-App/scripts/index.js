@@ -171,6 +171,10 @@ const App = {
         });
     },
 
+    showSettings: ()=> {
+
+    },
+
     showLogs: ()=> {
         runtime.db.serialize(()=> {
             runtime.db.all("SELECT name, date_time, rfid, phone_number, ent_id, is_in FROM logs", (error, attendee_rows)=> {
@@ -189,6 +193,8 @@ const App = {
 
                 let readingInterval = setInterval(()=> $.post(runtime.server + "/read", {}, (data)=> {
                     let rfid = data.toString().trim();
+                    $("#disconnected-error").addClass("d-none");
+
                     if(previousReading == rfid)
                         return;
                     
@@ -209,7 +215,7 @@ const App = {
                             dataTable.draw();
                         }
                     });
-                }), 1800);
+                }).fail(()=> $("#disconnected-error").removeClass("d-none")), 1800);
 
                 runtime.moveToSectionEvent = ()=> {
                     dataTable.destroy();
