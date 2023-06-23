@@ -30,7 +30,7 @@
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link active" href="#" id="logs-nav" onclick="App.moveToSection('logs', App.showLogs)">Logs</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" id="accounts-nav" onclick="App.moveToSection('accounts', null)">Accounts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" id="accounts-nav" onclick="App.moveToSection('accounts', App.showAccounts)">Accounts</a></li>
                         <li class="nav-item"><a class="nav-link" href="#" id="settings-nav" onclick="App.moveToSection('settings', App.showSettings)">Settings</a></li>
                         <li class="nav-item"><a class="nav-link" href="#" onclick="App.logout()">Log-out</a></li>
                     </ul>
@@ -118,6 +118,12 @@
 
             <div class="d-none animate__animated animate__slow" id="settings-section">
                 <br/><br/><br/><br/>
+
+                <div class="alert alert-danger d-none" role="alert" id="settings-error-alert">
+                    <p id="settings-error-alert-message">Something went wrong.</p>
+                </div>
+                <div class="alert alert-info d-none" role="alert" id="settings-saved">Settings changes saved!</div>
+
                 <div class="card card-body">
                     <h1>Settings</h1>
                     <hr/>
@@ -137,7 +143,7 @@
                             <div class="form-group row">
                                 <label for="settings-password" class="col-form-label col-3">Old Password</label>
                                 <div class="col-9">
-                                    <input type="text" id="settings-password" class="form-control" placeholder="Old Password" />
+                                    <input type="password" id="settings-password" class="form-control" placeholder="Old Password" />
                                 </div>
                             </div>
                             <div class="form-group-gap"></div>
@@ -145,7 +151,7 @@
                             <div class="form-group row">
                                 <label for="settings-new-password" class="col-form-label col-3">New Password</label>
                                 <div class="col-9">
-                                    <input type="text" id="settings-new-password" class="form-control" placeholder="New Password" />
+                                    <input type="password" id="settings-new-password" class="form-control" placeholder="New Password" />
                                 </div>
                             </div>
                             <div class="form-group-gap"></div>
@@ -153,13 +159,13 @@
                             <div class="form-group row">
                                 <label for="settings-new-password-confirm" class="col-form-label col-3">Confirm</label>
                                 <div class="col-9">
-                                    <input type="text" id="settings-new-password-confirm" class="form-control" placeholder="Confirm New Password" />
+                                    <input type="password" id="settings-new-password-confirm" class="form-control" placeholder="Confirm New Password" />
                                 </div>
                             </div>
 
                             <br/>
                             <div align="right">
-                                <button class="btn btn-primary" onclick="App.applySettings()">Save Changes</button>
+                                <button class="btn btn-primary" onclick="App.processSettingsSave()">Save Changes</button>
                             </div>
                         </div>
 

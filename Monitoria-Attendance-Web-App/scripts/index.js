@@ -13,6 +13,7 @@ $.DataTable = require("datatables.net-bs5")(window, $);
 
 let runtime = {
     server: "http://192.168.1.1:80",
+    username: null,
     interval: null,
     moveToSectionEvent: null,
     db: new sqlite3.Database(path.resolve(__dirname, "./db/main_db.db"))
@@ -60,7 +61,7 @@ const App = {
             $("#" + section + "-nav").addClass("active");
             cache.page = section;
 
-            if(runtime.moveToSectionEvent) {
+            if(runtime.moveToSectionEvent && runtime.moveToSectionEvent != null) {
                 runtime.moveToSectionEvent();
                 runtime.moveToSectionEvent = null;
             }
@@ -100,6 +101,94 @@ const App = {
     logout: ()=> {
         $("#main-content").addClass("animate__slideOutUp");
         setTimeout(()=> window.location.reload(), 1000);
+    },
+
+    processSettingsSave: ()=> {
+        let username = $("#settings-username").val(),
+            oldPassword = $("#settings-password").val(),
+            newPassword = $("#settings-new-password").val(),
+            confirmPassword = $("#settings-new-password-confirm").val();
+
+        $("#settings-error-alert").addClass("d-none");
+        $("#settings-saved").addClass("d-none");
+
+        runtime.moveToSectionEvent = ()=> {
+            $("#settings-error-alert").addClass("d-none");
+            $("#settings-saved").addClass("d-none");
+
+            for(let id of ["#settings-username",
+                "#settings-password",
+                "#settings-new-password",
+                "#settings-new-password-confirm"])
+                $(id).val("");
+        };
+
+        if(!username || username == "") {
+            $("#settings-error-alert")
+                .removeClass("d-none")
+                .html("Username cannot be empty.");
+
+            return;
+        }
+
+        if(!/^[a-zA-Z0-9_]+$/.test(username)) {
+            $("#settings-error-alert")
+                .removeClass("d-none")
+                .html("Invalid username string.");
+
+            return;
+        }
+
+        if(!oldPassword || oldPassword == "") {
+            $("#settings-error-alert")
+                .removeClass("d-none")
+                .html("Password cannot be empty.");
+
+            return;
+        }
+
+        if(!newPassword || newPassword == "") {
+            $("#settings-error-alert")
+                .removeClass("d-none")
+                .html("New password cannot be empty.");
+
+            return;
+        }
+
+        if(!confirmPassword || confirmPassword == "") {
+            $("#settings-error-alert")
+                .removeClass("d-none")
+                .html("Password confirmation cannot be empty.");
+
+            return;
+        }
+
+        if(newPassword != confirmPassword) {
+            $("#settings-error-alert")
+                .removeClass("d-none")
+                .html("Password confirmation did not match.");
+
+            return;
+        }
+
+        username = base64.encode(username);
+        oldPassword = base64.encode(md5(oldPassword));
+        newPassword = base64.encode(md5(newPassword));
+
+        runtime.db.serialize(() => {
+            runtime.db.all("SELECT * FROM admins WHERE id=" + cache.userId + " AND password=\"" + oldPassword + "\"", (err, rows) => {
+                if(err) $("#settings-error-alert").removeClass("d-none").html("Something went wrong.");
+                else {
+                    if(rows.length == 1) {
+                        runtime.db.run("UPDATE admins SET username=\"" + username + "\", password=\"" + newPassword + "\" WHERE id=\"" + cache.userId + "\" AND password=\"" + oldPassword + "\"");
+                        $("#settings-saved").removeClass("d-none");
+
+                        runtime.username = base64.decode(username);
+                    }
+                    else $("#settings-error-alert").removeClass("d-none").html("Incorrect old password.");
+                }
+            });
+        });
     },
 
     processLogin: ()=> {
@@ -150,6 +239,9 @@ const App = {
                                     setTimeout(()=> $("#main-navbar").addClass("d-block"), 1000);
                                     clearInterval(runtime.interval);
 
+                                    cache.userId = rows[0].id;
+                                    runtime.username = base64.decode(username);
+
                                     App.showLogs();
                                 }, 1500);
                             }
@@ -172,7 +264,8 @@ const App = {
     },
 
     showSettings: ()=> {
-
+        $("#settings-error-alert").addClass("d-none");
+        $("#settings-username").val(runtime.username);
     },
 
     showLogs: ()=> {
