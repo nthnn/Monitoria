@@ -286,8 +286,8 @@ const App = {
 
                 let readingInterval = setInterval(()=> $.post(runtime.server + "/read", {}, (data)=> {
                     let rfid = data.toString().trim();
-                    $("#disconnected-error").addClass("d-none");
 
+                    $("#disconnected-error").addClass("d-none");
                     if(previousReading == rfid)
                         return;
                     
@@ -297,14 +297,16 @@ const App = {
                     runtime.db.all("SELECT name, phone_number, ent_id, is_in FROM accounts WHERE rfid=\"" + rfid + "\"", (err, rows)=> {
                         if(!err && rows.length == 1) {
                             let date = new Date().toString();
+                            let entityName = rows[0].name, entityId = rows[0].ent_id, entityPhoneNumber = rows[0].phone_number;
 
                             date = date.substring(4, date.length);
                             date = date.substring(0, date.indexOf("("));
+                            date = date.substring(0, date.indexOf(" GMT"));
         
-                            runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + rows[0].name + "\", \"" + date + "\", \"" + rfid + "\", \"" + rows[0].phone_number + "\", \"" + rows[0].ent_id + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
+                            runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + entityName + "\", \"" + date + "\", \"" + rfid + "\", \"" + entityPhoneNumber + "\", \"" + entityId + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
                             runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
 
-                            dataTable.row.add([date, rows[0].ent_id, rows[0].phone_number, rows[0].name, (rows[0].is_in == "0" ? "&#9675;" : "&#9679;")]);
+                            dataTable.row.add([date, entityId, entityPhoneNumber, entityName, (rows[0].is_in == "0" ? "&#9675;" : "&#9679;")]);
                             dataTable.draw();
                         }
                     });
