@@ -6,8 +6,6 @@ const base64 = require("base-64");
 const jQuery = $;
 const JsBarcode = require("jsbarcode");
 
-require("bootstrap");
-
 window.jQuery = window.$ = $;
 $.DataTable = require("datatables.net-bs5")(window, $);
 
@@ -29,6 +27,11 @@ const Modal = {
 
     closeModal: (modal)=> {
         $("#" + modal + "-modal").addClass("animate__fadeOut").removeClass("animate__fadeIn");
+
+        if(runtime.moveToSectionEvent) {
+            runtime.moveToSectionEvent();
+            runtime.moveToSectionEvent = null;
+        }
 
         setTimeout(()=> {
             $("#" + modal + "-modal").hide();
@@ -72,15 +75,20 @@ const App = {
     addEntityModal: ()=> {
         Modal.showModal("add-entity");
 
-        $.post(runtime.server + "/read", {}, (data)=> {
+        let tapInterval = setInterval(()=> $.post(runtime.server + "/read", {}, (data)=> {
             let rfid = data.toString().trim();
+
+            if(rfid == "00-00-00-00")
+                return;
 
             $("#add-entity-no-rfid").addClass("d-none");
             $("#add-entity-rfid-barcode").removeClass("d-none");
             $("#add-entity-rfid").attr("value", rfid);
 
             JsBarcode("#add-entity-rfid-barcode", rfid, { displayValue: false });
-        });
+        }), 1800);
+
+        runtime.moveToSectionEvent = ()=> clearInterval(tapInterval);
     },
 
     showSplashScreen: (nextContent)=> {
@@ -306,7 +314,7 @@ const App = {
                             runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + entityName + "\", \"" + date + "\", \"" + rfid + "\", \"" + entityPhoneNumber + "\", \"" + entityId + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
                             runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
 
-                            dataTable.row.add([date, entityId, entityPhoneNumber, entityName, (rows[0].is_in == "0" ? "&#9675;" : "&#9679;")]);
+                            dataTable.row.add([date, entityId, entityPhoneNumber, entityName, (rows[0].is_in != "0" ? "&#9675;" : "&#9679;")]);
                             dataTable.draw();
                         }
                     });
@@ -323,4 +331,7 @@ const App = {
     }
 };
 
-$(document).ready(()=> App.showSplashScreen());
+$(document).ready(()=> {
+    require("bootstrap");
+    App.showSplashScreen();
+});
