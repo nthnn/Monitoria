@@ -179,8 +179,8 @@ const App = {
                     $("#log-table").html("");
 
                     for(let attendee_row of attendee_rows)
-                        $("#log-table").prepend("<tr><td>" + attendee_row.date_time + "</td><td>" + attendee_row.ent_id + "</td><td>" + attendee_row.phone_number + "</td><td>" + attendee_row.name + "</td></tr>");
-                        dataTable = $('#logs').DataTable({ ordering: false });
+                        $("#log-table").prepend("<tr><td>" + attendee_row.date_time + "</td><td>" + attendee_row.ent_id + "</td><td>" + attendee_row.phone_number + "</td><td>" + attendee_row.name + "</td><td>" + (attendee_row.is_in == "0" ? "&#9675;" : "&#9679;") + "</td></tr>");
+                        dataTable = $('#logs').DataTable({ order: [0, "desc"] });
                 }
 
                 let previousReading = null, resetPreviousID = setInterval(()=> previousReading = null, 5000);
@@ -200,10 +200,8 @@ const App = {
                             runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + rows[0].name + "\", \"" + date + "\", \"" + rfid + "\", \"" + rows[0].phone_number + "\", \"" + rows[0].ent_id + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
                             runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
 
-                            dataTable.rows.add([[date, rows[0].ent_id, rows[0].phone_number, rows[0].name]]);
+                            dataTable.row.add([date, rows[0].ent_id, rows[0].phone_number, rows[0].name, (rows[0].is_in == "0" ? "&#9675;" : "&#9679;")]);
                             dataTable.draw();
-
-                            $("#log-table").prepend("<tr><td>" + date + "</td><td>" + rows[0].ent_id + "</td><td>" + rows[0].phone_number + "</td><td>" + rows[0].name + "</td></tr>");
                         }
                     });
                 }), 1000);
