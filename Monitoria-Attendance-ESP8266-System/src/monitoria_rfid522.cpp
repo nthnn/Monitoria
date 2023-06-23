@@ -1,59 +1,23 @@
 #include "monitoria_rfid522.h"
 
 void MonitoriaRFID522::init() {
-    this->rfid.PCD_Init();
-}
-
-
-void MonitoriaRFID522::reset_previous_id() {
-    this->prev_id[0] = 0;
-    this->prev_id[1] = 0;
-    this->prev_id[2] = 0;
-    this->prev_id[3] = 0;
-    
-    this->new_id[0] = 0;
-    this->new_id[1] = 0;
-    this->new_id[2] = 0;
-    this->new_id[3] = 0;
-
     this->rfid.PCD_Reset();
-    this->rfid = MFRC522(this->_ss_pin, this->_rst_pin);
-
     this->rfid.PCD_Init();
 }
 
-void MonitoriaRFID522::cycle() {
+bool MonitoriaRFID522::cycle() {
     this->rfid.PICC_IsNewCardPresent();
-}
-
-bool MonitoriaRFID522::read_rfid_card() {
-    bool read = this->rfid.PICC_ReadCardSerial();
-
-    for(byte i = 0; i < 4; i++) {
-        if(this->prev_id[i] != this->rfid.uid.uidByte[i])
-            this->prev_id[i] = this->new_id[i];
-
-        this->new_id[i] = this->rfid.uid.uidByte[i];
-    }
-
-    return read;
-}
-
-bool MonitoriaRFID522::is_new_rfid_card() {
-    for(byte i = 0; i < 4; i++)
-        if(this->prev_id[i] != this->new_id[i]) {
-            for(byte i = 0; i < 4; i++)
-                this->prev_id[i] = this->new_id[i];
-
-            return true;
-        }
-
-    return false;
+    return this->rfid.PICC_ReadCardSerial();
 }
 
 String MonitoriaRFID522::to_string() {
-    return String(this->new_id[0], HEX) + "-" +
-        String(this->new_id[1], HEX) + "-" +
-        String(this->new_id[2], HEX) + "-" +
-        String(this->new_id[3], HEX);
+    if(this->rfid.uid.uidByte[0] == 0 &&
+        this->rfid.uid.uidByte[1] == 0 &&
+        this->rfid.uid.uidByte[2] == 0)
+        return String("00-00-00-00");
+
+    return String(this->rfid.uid.uidByte[0], HEX) + "-" +
+        String(this->rfid.uid.uidByte[1], HEX) + "-" +
+        String(this->rfid.uid.uidByte[2], HEX) + "-" +
+        String(this->rfid.uid.uidByte[3], HEX);
 }
