@@ -14,6 +14,7 @@ MonitoriaSIM800L sim800l(MONITORIA_SIM800L_RX, MONITORIA_SIM800L_TX);
 ESP8266WebServer server(MONITORIA_SERVER_PORT);
 LiquidCrystal_I2C lcd(MONITORIA_LCD_I2C_ADDRESS, MONITORIA_LCD_I2C_COLS, MONITORIA_LCD_I2C_ROWS);
 
+unsigned long prev_millis = 0;
 static String previous_hash = "";
 
 void handleCheck();
@@ -41,6 +42,12 @@ void setup() {
 }
 
 void loop() {
+    unsigned long curr_millis = millis();
+    if(curr_millis - prev_millis > 4000) {
+        prev_millis = curr_millis;
+        rfid.reset_rfid();
+    }
+
     server.handleClient();
 }
 

@@ -11,6 +11,7 @@ class MonitoriaRFID522 {
     }
 
     void init();
+    void reset_rfid();
     bool cycle();
 
     String to_string();
