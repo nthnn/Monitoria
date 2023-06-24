@@ -40,7 +40,11 @@ const Modal = {
                 "add-entity-name",
                 "add-entity-phone-number",
                 "add-entity-rfid",
-                "add-entity-ent-id"
+                "add-entity-ent-id",
+
+                "add-admin-username",
+                "add-admin-password",
+                "add-admin-password-confirmation"
             ])
                 $("#" + id).val("");
 
@@ -264,6 +268,11 @@ const App = {
         $("#settings-username").val(runtime.username);
     },
 
+    showAccounts: ()=> {
+        App.renderEntities();
+        App.renderAdmins();
+    },
+
     showLogs: ()=> {
         runtime.db.serialize(()=> {
             runtime.db.all("SELECT name, date_time, rfid, phone_number, ent_id, is_in FROM logs", (error, attendee_rows)=> {
@@ -314,6 +323,32 @@ const App = {
                     clearInterval(readingInterval);
                     clearInterval(resetPreviousID);
                 };
+            });
+        });
+    },
+
+    deleteEntity: (id)=> {},
+
+    deleteAdmin: (id)=> {},
+
+    renderEntities: ()=> {},
+
+    renderAdmins: ()=> {
+        runtime.db.serialize(()=> {
+            runtime.db.all("SELECT id, username FROM admins", (err, rows)=> {
+                if(!err) {
+                    let adminCards = "<br/><div class=\"row\">", count = 0;
+
+                    for(let row of rows) {
+                        if(count % 2 == 0)
+                            adminCards += "</div><br/><div class=\"row\">";
+
+                        adminCards += "<div class=\"col-lg-6\"><div class=\"card card-body border-secondary border\"><h3>" + base64.decode(row.username) + "</h3><hr/><button class=\"btn btn-outline-danger\" onclick=\"App.deleteAdmin(" + row.id + ")\">Delete</button></div></div>";
+                        count++;
+                    }
+
+                    $("#admins").html(adminCards + "</div>");
+                }
             });
         });
     },
@@ -398,6 +433,7 @@ const App = {
             runtime.db.all("SELECT username FROM admins WHERE username=\"" + username + "\"", (err, rows)=> {
                 if(!err && rows.length == 0) {
                     runtime.db.run("INSERT INTO admins (username, password, account_type) VALUES(\"" + username + "\", \"" + password + "\", 0)");
+                    App.renderAdmins();
 
                     Modal.closeModal("add-admin");
                     Modal.messageModal("Administrator Added", "New administrator account was successfully added!")
