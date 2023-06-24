@@ -48,18 +48,20 @@ void setup() {
 
 void loop() {
     unsigned long curr_millis = millis();
-    if(curr_millis - prev_millis > 1800) {
+    if(curr_millis - prev_millis > 5000) {
         prev_millis = curr_millis;
+        previous_hash = "";
+
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Idle...");
+    }
+    else if(curr_millis - prev_millis > 1800) {
         rfid.reset_rfid();
     }
     else if(curr_millis - prev_millis > 1200) {
         digitalWrite(MONITORIA_LED_SUCCESS, LOW);
         digitalWrite(MONITORIA_LED_FAIL, LOW);
-    }
-    else if(curr_millis - prev_millis > 5000) {
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("Idle...");
     }
 
     server.handleClient();
