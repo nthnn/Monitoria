@@ -39,6 +39,9 @@ void setup() {
     server.on("/read", handleRFID);
     server.on("/data", handleDataReceived);
     server.begin();
+
+    pinMode(MONITORIA_LED_SUCCESS, OUTPUT);
+    pinMode(MONITORIA_LED_FAIL, OUTPUT);
 }
 
 void loop() {
@@ -46,6 +49,10 @@ void loop() {
     if(curr_millis - prev_millis > 1800) {
         prev_millis = curr_millis;
         rfid.reset_rfid();
+    }
+    else if(curr_millis - prev_millis > 1200) {
+        digitalWrite(MONITORIA_LED_SUCCESS, LOW);
+        digitalWrite(MONITORIA_LED_FAIL, LOW);
     }
 
     server.handleClient();
@@ -66,6 +73,9 @@ void handleDataReceived() {
         lcd.setCursor(0, 0);
         lcd.print("Unregistered ID.");
 
+        server.send(200, "text/plain", "ERR");
+        digitalWrite(MONITORIA_LED_FAIL, HIGH);
+
         return;
     }
     else if(server.arg("status").toInt() == 1) {
@@ -81,5 +91,11 @@ void handleDataReceived() {
 
         server.send(200, "text/plain", "OK");
         sim800l.send_sms(server.arg("ent_cp"), MONITORIA_SMS_MESSAGE);
+
+        digitalWrite(MONITORIA_LED_SUCCESS, HIGH);
+        return;
     }
+
+    server.send(200, "text/plain", "ERR");
+    digitalWrite(MONITORIA_LED_FAIL, HIGH);
 }
