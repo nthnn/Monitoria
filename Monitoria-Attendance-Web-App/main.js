@@ -1,4 +1,5 @@
 const { app, BrowserWindow, screen } = require('electron');
+require('@electron/remote/main').initialize();
 
 app.on('ready', ()=> {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -16,6 +17,7 @@ app.on('ready', ()=> {
             height: 35
         },
         webPreferences: {
+            enableRemoteModule: true,
             nodeIntegration: true,
             contextIsolation: false
         },
@@ -23,6 +25,10 @@ app.on('ready', ()=> {
 
     mainWindow.loadFile('index.html');
     mainWindow.on('closed', () => mainWindow = null);
+});
+
+app.on('browser-window-created', (_, window) => {
+    require("@electron/remote/main").enable(window.webContents);
 });
 
 app.on('window-all-closed', () => {

@@ -1,9 +1,14 @@
 const path = require("path");
+const fs = require("fs");
+const { dialog } = require("@electron/remote");
+
 const $ = require("jquery");
+const jQuery = $;
+
 const sqlite3 = require("sqlite3").verbose();
 const md5 = require("md5");
 const base64 = require("base-64");
-const jQuery = $;
+
 const JsBarcode = require("jsbarcode");
 
 window.jQuery = window.$ = $;
@@ -81,6 +86,38 @@ const App = {
             }
             if(fun) fun();
         }, 1000);
+    },
+
+    saveAsCsv: ()=> {
+        runtime.db.serialize(()=> {
+            runtime.db.all("SELECT * FROM logs", (err, rows)=> {
+                if(err) {
+                    Modal.messageModal("Error Saving Logs", "Something went wrong while trying to save logs to file.");
+                    runtime.moveToSectionEvent = null;
+                }
+                else dialog.showSaveDialog({
+                    title: "Save Logs",
+                    defaultPath: "~/Documents/",
+                    buttonLabel: "Save",
+                    filters: [
+                        { name: "CSV Files", extensions: [ "csv" ] },
+                        { name: "All Files", extensions: [ "*" ] }
+                    ]
+                }).then(result => {
+                    if(result.filePath)
+                        fs.writeFile(result.filePath,
+                            rows.map(row => Object.values(row).join(",")).join("\n"),
+                            (err)=> {
+                                if(err)
+                                    Modal.messageModal("Error Saving Logs", "Something went wrong while trying to save logs to file.");
+                                else Modal.messageModal("Saved", "Logs has been successfully saved!");
+
+                                runtime.moveToSectionEvent = null;
+                            }
+                        );
+                });
+            });
+        });
     },
 
     showSplashScreen: (nextContent)=> {
@@ -355,7 +392,7 @@ const App = {
                         if(count % 2 == 0)
                             adminCards += "</div><br/><div class=\"row equal-cols\">";
 
-                        adminCards += "<div class=\"col-lg-6\"><div class=\"card card-body border-secondary border\"><h3>" + base64.decode(row.username) + "</h3>" + (cache.userId != row.id ? "<hr/><button class=\"btn btn-outline-danger\" onclick=\"App.deleteAdmin(" + row.id + ")\">Delete</button>" : "") + "</div></div>";
+                        adminCards += "<div class=\"col-lg-6\"><div class=\"card card-body border-secondary border\"><h3>" + base64.decode(row.username) + "</h3><hr/>" + (cache.userId != row.id ? ("<button class=\"btn btn-outline-danger\" onclick=\"App.deleteAdmin(" + row.id + ")\">Delete</button>") : "<p class=\"text-muted\">(In-use)</p>") + "</div></div>";
                         count++;
                     }
 
