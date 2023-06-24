@@ -393,10 +393,25 @@ const App = {
 
         username = base64.encode(username);
         password = base64.encode(md5(password));
-        runtime.db.run("INSERT INTO admins (username, password, account_type) (\"" + username + "\", \"" + password + "\", 0)");
 
-        Modal.closeModal("add-admin");
-        Modal.messageModal("Administrator Added", "New administrator account was successfully added!")
+        runtime.db.serialize(()=> {
+            runtime.db.all("SELECT username FROM admins WHERE username=\"" + username + "\"", (err, rows)=> {
+                if(!err && rows.length == 0) {
+                    runtime.db.run("INSERT INTO admins (username, password, account_type) VALUES(\"" + username + "\", \"" + password + "\", 0)");
+
+                    Modal.closeModal("add-admin");
+                    Modal.messageModal("Administrator Added", "New administrator account was successfully added!")
+                }
+                else if(rows.length > 0) {
+                    $("#add-admin-error").removeClass("d-none");
+                    $("#add-admin-error-text").html("Username already in use.");
+                }
+                else {
+                    $("#add-admin-error").removeClass("d-none");
+                    $("#add-admin-error-text").html(err);
+                }
+            });
+        });
     }
 };
 
