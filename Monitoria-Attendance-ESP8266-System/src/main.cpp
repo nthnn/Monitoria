@@ -27,6 +27,8 @@ void setup() {
 
     lcd.init();
     lcd.backlight();
+    lcd.setCursor(0, 0);
+    lcd.print("Idle...");
 
     WiFi.disconnect();
     WiFi.softAP(MONITORIA_SERVER_SSID, MONITORIA_SERVER_PASSWORD);
@@ -53,6 +55,11 @@ void loop() {
     else if(curr_millis - prev_millis > 1200) {
         digitalWrite(MONITORIA_LED_SUCCESS, LOW);
         digitalWrite(MONITORIA_LED_FAIL, LOW);
+    }
+    else if(curr_millis - prev_millis > 5000) {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Idle...");
     }
 
     server.handleClient();
