@@ -8,6 +8,7 @@ const jQuery = $;
 const sqlite3 = require("sqlite3").verbose();
 const md5 = require("md5");
 const base64 = require("base-64");
+const crypto = require("crypto");
 
 const JsBarcode = require("jsbarcode");
 
@@ -348,9 +349,17 @@ const App = {
                             runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + entityName + "\", \"" + date + "\", \"" + rfid + "\", \"" + entityPhoneNumber + "\", \"" + entityId + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
                             runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
 
+                            $.post(runtime.server + "/data?status=1&ent_name=" + entityName.replace(" ", "+")
+                                + "&ent_id=" + entityId
+                                + "&ent_cp=" + entityPhoneNumber
+                                + "&hash=" + crypto.randomBytes(20).toString('hex'),
+                                {},
+                                (_)=> console.log(_));
+
                             dataTable.row.add([date, entityId, entityPhoneNumber, entityName, (rows[0].is_in != "0" ? "&#9898;" : "&#9899;")]);
                             dataTable.draw();
                         }
+                        else $.post(runtime.server + "/data?status=0", {}, (_)=> {});
                     });
                 }).fail(()=> $("#disconnected-error").removeClass("d-none")), 1800);
 
