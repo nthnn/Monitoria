@@ -364,7 +364,19 @@ const App = {
         });
     },
 
-    deleteEntity: (id)=> {},
+    deleteEntity: (id)=> {
+        Modal.showModal("delete-entity");
+
+        $("#delete-entity-btn").on("click", ()=> {
+            runtime.db.serialize(()=> {
+                runtime.db.run("DELETE FROM accounts WHERE id=" + id);
+                App.renderEntities();
+
+                Modal.closeModal("delete-entity");
+                Modal.messageModal("Entity Deleted", "Entity account had been deleted successfully!");
+            });
+        });
+    },
 
     deleteAdmin: (id)=> {
         Modal.showModal("delete-admin");
@@ -380,7 +392,32 @@ const App = {
         });
     },
 
-    renderEntities: ()=> {},
+    renderEntities: ()=> {
+        runtime.db.serialize(()=> {
+            runtime.db.all("SELECT id, name, phone_number, rfid, ent_id FROM accounts", (err, rows)=> {
+                if(!err) {
+                    if(rows.length == 0) {
+                        $("#no-entities").removeClass("d-none");
+                        $("#entity-list").html("");
+
+                        return;
+                    }
+
+                    let entityCards = "<div class=\"row equal-cols\">", count = 0;
+                    for(let row of rows) {
+                        if(count % 2 == 0)
+                            entityCards += "</div><br/><div class=\"row equal-cols\">";
+
+                        entityCards += "<div class=\"col-lg-6\"><div class=\"card card-body border-secondary border\"><img id=\"barcode-" + row.id + "\" /><h3>" + row.name + "</h3><small class=\"text-muted\">" + row.ent_id + " / " + row.phone_number + "</small><hr/><button class=\"btn btn-outline-danger\" onclick=\"App.deleteEntity(" + row.id + ")\">Delete</button></div></div>";
+                        count++;
+                    }
+
+                    $("#no-entities").addClass("d-none");
+                    $("#entity-list").html(entityCards + "</div>");
+                }
+            });
+        });
+    },
 
     renderAdmins: ()=> {
         runtime.db.serialize(()=> {
@@ -429,12 +466,85 @@ const App = {
         let name = $("#add-entity-name").val(), phoneNumber = $("#add-entity-phone-number").val(), entityId = $("#add-entity-ent-id").val(), rfid = $("#add-entity-rfid").val();
         $("#add-admin-error").addClass("d-none");
 
+        if(!name || name == "") {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Entity name cannot be empty.");
+
+            return;
+        }
+
         if(!/^[a-zA-Z .]+$/.test(name) && name.length < 10) {
             $("#add-entity-error").removeClass("d-none");
             $("#add-entity-error-text").html("Invalid new entity name.");
 
             return;
         }
+
+        if(!phoneNumber || phoneNumber == "") {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Entity phone number cannot be empty.");
+
+            return;
+        }
+
+        if(!/^\+?\d+$/.test(phoneNumber)) {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Invalid new entity phone number.");
+
+            return;
+        }
+
+        if(!entityId || entityId == "") {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Entity ID cannot be empty.");
+
+            return;
+        }
+
+        if(!/^\d+$/.test(entityId)) {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Invalid new entity ID. It should contain numbers only.");
+
+            return;
+        }
+
+        if(!rfid || rfid == "") {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Entity RFID cannot be empty. Please, tap a card.");
+
+            return;
+        }
+
+        if(!/^([0-9A-Fa-f]{2}-){3}[0-9A-Fa-f]{2}$/.test(rfid)) {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Invalid RFID card detected.");
+
+            return;
+        }
+
+        runtime.db.serialize(()=> {
+            runtime.db.all("SELECT * FROM accounts WHERE rfid=\"" + rfid + "\" OR phone_number=\"" + phoneNumber + "\" OR ent_id=\"" + entityId + "\"", (err, rows)=> {
+                if(err) {
+                    $("#add-entity-error").removeClass("d-none");
+                    $("#add-entity-error-text").html("Something went wrong.");
+        
+                    return;
+                }
+
+                if(rows.length != 0) {
+                    $("#add-entity-error").removeClass("d-none");
+                    $("#add-entity-error-text").html("Either RFID, phone number, or entity ID was already in use.");
+        
+                    return;
+                }
+
+                runtime.db.run("INSERT INTO accounts (name, phone_number, rfid, is_in, ent_id) VALUES(\"" + name + "\", \"" + phoneNumber + "\", \"" + rfid + "\", 0, " + entityId + ")");
+                App.renderEntities();
+
+                Modal.closeModal("add-entity");
+                Modal.messageModal("Entity Added", "The entity was successfully added!");
+            });
+        });
     },
 
     executeAddAdministrator: ()=> {

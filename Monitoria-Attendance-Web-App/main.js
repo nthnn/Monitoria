@@ -25,6 +25,7 @@ app.on('ready', ()=> {
 
     globalShortcut.register('Control+Shift+I', () => { return false; });
     globalShortcut.register('Control+R', () => { return false; });
+    globalShortcut.register('Control+W', () => { return false; });
 
     mainWindow.loadFile('index.html');
     mainWindow.on('closed', () => mainWindow = null);

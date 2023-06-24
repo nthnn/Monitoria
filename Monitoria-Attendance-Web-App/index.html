@@ -133,7 +133,16 @@
                     </ul>
 
                     <div class="tab-content">
-                        <div class="tab-pane container active" id="entities"></div>
+                        <div class="tab-pane container active" id="entities">
+                            <div id="entity-list"></div>
+
+                            <div id="no-entities">
+                                <br/><br/><br/><br/><br/>
+                                <p align="center">No entities yet.</p>
+                                <br/><br/><br/><br/><br/>
+                            </div>
+                        </div>
+
                         <div class="tab-pane container fade" id="admins"></div>
                     </div>
                 </div>
@@ -322,6 +331,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="Modal.closeModal('delete-admin')">Cancel</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="delete-admin-btn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-backdrop animate__animated animate__faster" id="delete-entity-modal" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Entity</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="Modal.closeModal('delete-entity')"></button>
+                </div>
+
+                <div class="modal-body">Are you sure you want to delete this entity?</div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="Modal.closeModal('delete-entity')">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="delete-entity-btn">Delete</button>
                 </div>
             </div>
         </div>
