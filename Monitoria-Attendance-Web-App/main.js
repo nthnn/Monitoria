@@ -1,4 +1,4 @@
-const { app, BrowserWindow, screen } = require('electron');
+const { app, BrowserWindow, globalShortcut, screen } = require('electron');
 require('@electron/remote/main').initialize();
 
 app.on('ready', ()=> {
@@ -22,6 +22,9 @@ app.on('ready', ()=> {
             contextIsolation: false
         },
     });
+
+    globalShortcut.register('Control+Shift+I', () => { return false; });
+    globalShortcut.register('Control+R', () => { return false; });
 
     mainWindow.loadFile('index.html');
     mainWindow.on('closed', () => mainWindow = null);
