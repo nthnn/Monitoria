@@ -329,7 +329,19 @@ const App = {
 
     deleteEntity: (id)=> {},
 
-    deleteAdmin: (id)=> {},
+    deleteAdmin: (id)=> {
+        Modal.showModal("delete-admin");
+
+        $("#delete-admin-btn").on("click", ()=> {
+            runtime.db.serialize(()=> {
+                runtime.db.run("DELETE FROM admins WHERE id=" + id);
+                App.renderAdmins();
+
+                Modal.closeModal("delete-admin");
+                Modal.messageModal("Admin Deleted", "Administrator account had been deleted successfully!");
+            });
+        });
+    },
 
     renderEntities: ()=> {},
 
@@ -337,13 +349,13 @@ const App = {
         runtime.db.serialize(()=> {
             runtime.db.all("SELECT id, username FROM admins", (err, rows)=> {
                 if(!err) {
-                    let adminCards = "<br/><div class=\"row\">", count = 0;
+                    let adminCards = "<div class=\"row equal-cols\">", count = 0;
 
                     for(let row of rows) {
                         if(count % 2 == 0)
-                            adminCards += "</div><br/><div class=\"row\">";
+                            adminCards += "</div><br/><div class=\"row equal-cols\">";
 
-                        adminCards += "<div class=\"col-lg-6\"><div class=\"card card-body border-secondary border\"><h3>" + base64.decode(row.username) + "</h3><hr/><button class=\"btn btn-outline-danger\" onclick=\"App.deleteAdmin(" + row.id + ")\">Delete</button></div></div>";
+                        adminCards += "<div class=\"col-lg-6\"><div class=\"card card-body border-secondary border\"><h3>" + base64.decode(row.username) + "</h3>" + (cache.userId != row.id ? "<hr/><button class=\"btn btn-outline-danger\" onclick=\"App.deleteAdmin(" + row.id + ")\">Delete</button>" : "") + "</div></div>";
                         count++;
                     }
 
