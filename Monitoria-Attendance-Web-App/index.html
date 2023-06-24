@@ -108,9 +108,7 @@
 
                         <div class="col-lg-6" align="right">
                             <div class="dropdown">
-                                <button class="btn btn-primary dropdown-toggle" type="button" id="add-account-button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Add Account
-                                </button>
+                                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="add-account-button" data-bs-toggle="dropdown" aria-expanded="false">New</button>
 
                                 <div class="dropdown-menu" aria-labelledby="add-account-button">
                                     <a class="dropdown-item" href="#" onclick="App.addAdminModal()">Administrator</a>
@@ -122,8 +120,8 @@
                     <hr/>
 
                     <ul class="nav nav-pills" align="center">
-                        <li class="nav-item"><a class="nav-link active" data-bs-toggle="pill" href="#entities" style="border: 1px solid">Entities</a></li>
-                        <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#admins" style="border: 1px solid">Administrators</a></li>
+                        <li class="nav-item"><a class="nav-link active" data-bs-toggle="pill" href="#entities" style="border-bottom: 1px solid">Entities</a></li>
+                        <li class="nav-item"><a class="nav-link" data-bs-toggle="pill" href="#admins" style="border-bottom: 1px solid">Administrators</a></li>
                     </ul>
                       
                     <div class="tab-content">
@@ -239,7 +237,7 @@
                         </div>
                     </div>
 
-                    <div id="add-entity-error" class="animate__animated d-none">
+                    <div id="add-entity-error" class="d-none">
                         <br/>
                         <div class="card card-body border-danger border text-white bg-danger" id="add-entity-error-text">
                         </div>
@@ -265,14 +263,6 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="row">
-                            <label for="add-admin-name" class="col-form-label col-4">Name</label>
-                            <div class="col-8">
-                                <input type="text" id="add-admin-name" class="form-control" placeholder="Name" />
-                            </div>
-                        </div>
-                        <div style="height: 6px"></div>
-
-                        <div class="row">
                             <label for="add-admin-username" class="col-form-label col-4">Username</label>
                             <div class="col-8">
                                 <input type="text" id="add-admin-username" class="form-control" placeholder="Username" />
@@ -296,7 +286,7 @@
                         </div>
                     </div>
 
-                    <div id="add-admin-error" class="animate__animated d-none">
+                    <div id="add-admin-error" class="d-none">
                         <br/>
                         <div class="card card-body border-danger border text-white bg-danger" id="add-admin-error-text">
                         </div>
@@ -306,6 +296,25 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="Modal.closeModal('add-admin')">Cancel</button>
                     <button type="button" class="btn btn-primary" style="float: right" onclick="App.executeAddAdministrator()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-backdrop animate__animated animate__faster" id="message-modal" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="message-modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="Modal.closeModal('message')"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p id="message-modal-message"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" onclick="Modal.closeModal('message')">Close</button>
                 </div>
             </div>
         </div>

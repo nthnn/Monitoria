@@ -47,6 +47,13 @@ const Modal = {
             $("#add-entity-no-rfid").removeClass("d-none");
             $("#add-entity-rfid-barcode").addClass("d-none");
         }, 850);
+    },
+
+    messageModal: (title, message)=> {
+        $("#message-modal-title").html(title);
+        $("#message-modal-message").html(message);
+
+        Modal.showModal("message");
     }
 };
 
@@ -70,25 +77,6 @@ const App = {
             }
             if(fun) fun();
         }, 1000);
-    },
-
-    addEntityModal: ()=> {
-        Modal.showModal("add-entity");
-
-        let tapInterval = setInterval(()=> $.post(runtime.server + "/read", {}, (data)=> {
-            let rfid = data.toString().trim();
-
-            if(rfid == "00-00-00-00")
-                return;
-
-            $("#add-entity-no-rfid").addClass("d-none");
-            $("#add-entity-rfid-barcode").removeClass("d-none");
-            $("#add-entity-rfid").attr("value", rfid);
-
-            JsBarcode("#add-entity-rfid-barcode", rfid, { displayValue: false });
-        }), 1800);
-
-        runtime.moveToSectionEvent = ()=> clearInterval(tapInterval);
     },
 
     showSplashScreen: (nextContent)=> {
@@ -328,6 +316,87 @@ const App = {
                 };
             });
         });
+    },
+
+    addEntityModal: ()=> {
+        Modal.showModal("add-entity");
+
+        let tapInterval = setInterval(()=> $.post(runtime.server + "/read", {}, (data)=> {
+            let rfid = data.toString().trim();
+
+            if(rfid == "00-00-00-00")
+                return;
+
+            $("#add-entity-no-rfid").addClass("d-none");
+            $("#add-entity-rfid-barcode").removeClass("d-none");
+            $("#add-entity-rfid").attr("value", rfid);
+
+            JsBarcode("#add-entity-rfid-barcode", rfid, { displayValue: false });
+        }), 1800);
+
+        runtime.moveToSectionEvent = ()=> clearInterval(tapInterval);
+    },
+
+    addAdminModal: ()=> {
+        Modal.showModal("add-admin");
+    },
+
+    executeAddEntity: ()=> {
+        let name = $("#add-entity-name").val(), phoneNumber = $("#add-entity-phone-number").val(), entityId = $("#add-entity-ent-id").val(), rfid = $("#add-entity-rfid").val();
+        $("#add-admin-error").addClass("d-none");
+
+        if(!/^[a-zA-Z .]+$/.test(name) && name.length < 10) {
+            $("#add-entity-error").removeClass("d-none");
+            $("#add-entity-error-text").html("Invalid new entity name.");
+
+            return;
+        }
+    },
+
+    executeAddAdministrator: ()=> {
+        let username = $("#add-admin-username").val(), password = $("#add-admin-password").val(), confirmPassword = $("#add-admin-password-confirmation").val();
+
+        if(!username || username == "") {
+            $("#add-admin-error").removeClass("d-none");
+            $("#add-admin-error-text").html("Username cannot be empty.");
+
+            return;
+        }
+
+        if(!/^[a-zA-Z0-9_]+$/.test(username)) {
+            $("#add-admin-error").removeClass("d-none");
+            $("#add-admin-error-text").html("Invalid new admin username.");
+
+            return;
+        }
+
+        if(!password || password == "") {
+            $("#add-admin-error").removeClass("d-none");
+            $("#add-admin-error-text").html("Password cannot be empty.");
+
+            return;
+        }
+
+        if(!confirmPassword || confirmPassword == "") {
+            $("#add-admin-error").removeClass("d-none");
+            $("#add-admin-error-text").html("Password confirmation cannot be empty.");
+
+            return;
+        }
+
+        if(password != confirmPassword) {
+            $("#add-admin-error").removeClass("d-none");
+            $("#add-admin-error-text").html("Password confirmation did not match.");
+
+            return;
+        }
+
+        username = base64.encode(username);
+        password = base64.encode(md5(password));
+        runtime.db.run("INSERT INTO admins (username, password, account_type) (\"" + username + "\", \"" + password + "\", 0)");
+
+        Modal.closeModal("add-admin");
+        Modal.messageModal("Administrator Added", "New administrator account was successfully added!")
     }
 };
 
