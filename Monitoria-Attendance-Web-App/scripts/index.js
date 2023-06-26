@@ -329,6 +329,8 @@ const App = {
 
                 let readingInterval = setInterval(()=> $.post(runtime.server + "/read", {}, (data)=> {
                     let rfid = data.toString().trim();
+                    if(rfid == "00-00-00-00")
+                        return;
 
                     $("#disconnected-error").addClass("d-none");
                     if(previousReading == rfid)
@@ -352,7 +354,8 @@ const App = {
                             $.post(runtime.server + "/data?status=1&ent_name=" + entityName.replace(" ", "+")
                                 + "&ent_id=" + entityId
                                 + "&ent_cp=" + entityPhoneNumber
-                                + "&hash=" + crypto.randomBytes(20).toString('hex'),
+                                + "&hash=" + crypto.randomBytes(20).toString('hex')
+                                + "&log_time=" + date.substring(12, 17),
                                 {},
                                 (_)=> console.log(_));
 
@@ -524,12 +527,12 @@ const App = {
             return;
         }
 
-        if(!/^([0-9A-Fa-f]{2}-){3}[0-9A-Fa-f]{2}$/.test(rfid)) {
+        /*if(!/^([0-9A-Fa-f]{2}-){3}[0-9A-Fa-f]{2}$/.test(rfid)) {
             $("#add-entity-error").removeClass("d-none");
             $("#add-entity-error-text").html("Invalid RFID card detected.");
 
             return;
-        }
+        }*/
 
         runtime.db.serialize(()=> {
             runtime.db.all("SELECT * FROM accounts WHERE rfid=\"" + rfid + "\" OR phone_number=\"" + phoneNumber + "\" OR ent_id=\"" + entityId + "\"", (err, rows)=> {
