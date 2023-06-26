@@ -97,7 +97,7 @@ void handleDataReceived() {
         lcd.print(server.arg("ent_name"));
         lcd.setCursor(0, 1);
         lcd.print(server.arg("ent_id"));
-        lcd.setCursor(10, 1);
+        lcd.setCursor(11, 1);
         lcd.print(server.arg("log_time"));
 
         server.send(200, "text/plain", "OK");

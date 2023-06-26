@@ -351,11 +351,19 @@ const App = {
                             runtime.db.run("INSERT INTO logs(name, date_time, rfid, phone_number, ent_id, is_in) VALUES(\"" + entityName + "\", \"" + date + "\", \"" + rfid + "\", \"" + entityPhoneNumber + "\", \"" + entityId + "\", " + (rows[0].is_in == "0" ? "1" : "0") + ")");
                             runtime.db.run("UPDATE accounts SET is_in=" + (rows[0].is_in == "0" ? "1" : "0") + " WHERE rfid=\"" + rfid + "\"");
 
+                            let logTime = date.substring(12, 17);
+                            logTime = (+(parseInt(logTime.substring(0, 2)) - 12)) + logTime.substring(2);
+
+                            console.log(runtime.server + "/data?status=1&ent_name=" + entityName.replace(" ", "+")
+                                + "&ent_id=" + entityId
+                                + "&ent_cp=" + entityPhoneNumber
+                                + "&hash=" + crypto.randomBytes(20).toString('hex')
+                                + "&log_time=" + logTime);
                             $.post(runtime.server + "/data?status=1&ent_name=" + entityName.replace(" ", "+")
                                 + "&ent_id=" + entityId
                                 + "&ent_cp=" + entityPhoneNumber
                                 + "&hash=" + crypto.randomBytes(20).toString('hex')
-                                + "&log_time=" + date.substring(12, 17),
+                                + "&log_time=" + logTime,
                                 {},
                                 (_)=> console.log(_));
 
