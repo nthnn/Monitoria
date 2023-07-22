@@ -40,7 +40,10 @@ To set up Monitoria and start using the attendance monitoring system, please fol
 
 ### Hardware Set-up
 
-1. Wire up and follow the schematic diagram at [Monitoria-Attendance-Schematics](Monitoria-Attendance-Schematics).
+1. Wire up and follow the schematic diagram at [Monitoria-Attendance-Schematics](Monitoria-Attendance-Schematics), see the diagram below.
+
+![Monitoria Schematic Diagram](Monitoria-Attendance-Schematics/monitoria-schematics.png)
+
 2. Open Visual Studio Code. Install the [PlatformIO](https://platformio.org) extension if you don't have it yet; otherwise, open the [Monitoria-Attendance-ESP8266-System](Monitoria-Attendance-ESP8266-System) on the PlatformIO.
 3. Click the upload button at the status bar. If the wiring is correct, it should upload easily on your board.
 
@@ -49,7 +52,6 @@ To set up Monitoria and start using the attendance monitoring system, please fol
 > Removing the RX and TX pins of other UART modules on an Arduino board is not always a must when uploading a program firmware, but it can be necessary in certain situations such as conflict with the serial communication.
 
 ### Software Set-up
-
 
 1. Clone the Monitoria repository from GitHub.
     ```batch
